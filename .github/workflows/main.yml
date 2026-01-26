@@ -1,0 +1,30 @@
+name: deploy com workflow usando docker
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checout
+        uses: actions/checkout@v4
+      - name: Login usando docker
+        user: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: build de imagens
+        run: |
+          docker build -t elivandrolopes:logistico:1.0 .
+          docker push elivandrolopes/logistico:1.0
+  deploy:
+    needs: build
+    runs-on: [self-hosted,linux]
+    steps:
+      - name: deploy em maquina local
+        run: |
+          cd /media/grupomateus/3f9a2e1e-ae3c-4ea5-9750-035aa9017e4d/servidor
+          docker compose pull logistico-app
+          docker compose up -d logistico-app
+          
