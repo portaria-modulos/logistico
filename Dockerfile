@@ -13,7 +13,7 @@ COPY . .
 # CORREÇÃO 1: Adicionado -DskipTests para não validar banco de dados no build
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-focal
 
 WORKDIR /portaria
 
