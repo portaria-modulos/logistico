@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: build de imagens
         run: |
-          docker build -t elivandrolopes:logistico:1.0 .
+          docker build -t elivandrolopes/logistico:1.0 .
           docker push elivandrolopes/logistico:1.0
   deploy:
     needs: build
