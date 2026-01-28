@@ -18,7 +18,7 @@ public class UpdateMaterialLogistico {
    @Transactional
     public void updateLogistico(UpdateMaterialDTO dto){
        dto.itens().forEach(e->{
-           if(e.qtdAtivo()<=0 || e.qtdManutencao()<0){
+           if(e.qtdAtivo()<0 || e.qtdManutencao()<0){
                throw new RuntimeException("Valor invalido");
            }
        });
