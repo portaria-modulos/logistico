@@ -37,6 +37,7 @@ public class ControlerRegistroMaterial {
         this.serviceUpdate = serviceUpdate;
         this.serviceDelete = serviceDelete;
     }
+
 @PostMapping("/registro")
 public ResponseEntity<?> save(@RequestBody() @Valid() RegistroMaterialDTO dto){
    try{

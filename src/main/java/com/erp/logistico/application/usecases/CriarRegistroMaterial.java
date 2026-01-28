@@ -27,7 +27,7 @@ public class CriarRegistroMaterial {
    }
    public void criarControleMaterial(RegistroMaterialDTO dto){
         dto.itens().forEach(e->{
-            if(e.qtdAtivo()<=0 || e.qtdManutencao()<0){
+            if(e.qtdAtivo()<0 || e.qtdManutencao()<0){
                 String msg = """
                         Quantidade invalida:
                         qtdAtivo: %s
