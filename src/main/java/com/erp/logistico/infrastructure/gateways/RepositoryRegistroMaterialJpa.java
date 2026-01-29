@@ -5,7 +5,11 @@ import com.erp.logistico.application.usecases.MaterialLogistico.UpdateMaterialDT
 import com.erp.logistico.domain.dto.MaterialLogisticoDTO;
 import com.erp.logistico.domain.dto.RegistroMaterialDTO;
 import com.erp.logistico.domain.dto.UpdateMaterialLogisticoDTO;
+import com.erp.logistico.domain.entities.Logistico.CriarMaterialLogisticoCommand;
 import com.erp.logistico.domain.entities.Logistico.MaterialLogistico;
+import com.erp.logistico.domain.entities.Logistico.MaterialLogisticoFactory;
+import com.erp.logistico.domain.entities.Logistico.StatusMaterialLogistico;
+import com.erp.logistico.domain.entities.registro.CriarRegistroMaterialLogisticoCommand;
 import com.erp.logistico.domain.entities.registro.RegistroMaterial;
 import com.erp.logistico.domain.entities.registro.RegistroMaterialFactory;
 import com.erp.logistico.infrastructure.persistence.RegistroMaterial.RegistroMaterialEntity;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroMaterial {
     private final RespositotyRegistroMaterial repository;
@@ -60,10 +65,35 @@ public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroM
 
     @Override
     @Transactional
-    public void update(UpdateMaterialDTO update) {
-        Set<MaterialLogisticoEntity> itensAtualizado = new HashSet<>();
-        var material = repository.findById(update.registroId()).orElseThrow(()->new RuntimeException("Registro não encontrado"));
-        for (UpdateMaterialLogisticoDTO d:update.itens()){
+    public void update(UpdateMaterialDTO dto) {
+        var material = repository.findById(dto.registroId()).orElseThrow(()->new RuntimeException("Registro não encontrado"));
+        if (dto.update() != null && !dto.update().isEmpty()) {
+            dto.update().forEach(e->{
+                if(e.qtdAtivo()<0 || e.qtdManutencao()<0){
+                    String msg = """
+                        Quantidade invalida:
+                        qtdAtivo: %s
+                        qtdManutencao: %s
+                        
+                        """.formatted(e.qtdAtivo(),e.qtdManutencao());
+                    throw new RuntimeException(msg);
+                }
+            });
+            for (MaterialLogisticoDTO novo : dto.update()) {
+                MaterialLogisticoEntity item = new MaterialLogisticoEntity();
+                item.setRegistroMaterial(material);
+                item.setTipo(novo.tipo());
+                item.setAtivo(true);
+                item.setFilial(material.getFilial());
+                item.setQuantidadeManutencao(novo.qtdManutencao());
+                item.setQuantiadeAtivo(novo.qtdAtivo());
+                item.setQuantidadeTotal(novo.qtdAtivo() + novo.qtdManutencao());
+                item.setStatus(StatusMaterialLogistico.ATIVO);
+
+                material.getItens().add(item);
+            }
+        }
+        for (UpdateMaterialLogisticoDTO d:dto.itens()){
             MaterialLogisticoEntity item;
             if(d.id()!=null){
                  item = material.getItens().stream().filter(s -> Objects.equals(s.getId(), d.id()))
@@ -74,7 +104,6 @@ public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroM
                 item = new MaterialLogisticoEntity();
                 item.setRegistroMaterial(material);
                 material.getItens().add(item);
-// 🔥 essencial
             }
             item.setQuantidadeManutencao(d.qtdManutencao());
             item.setQuantiadeAtivo(d.qtdAtivo());

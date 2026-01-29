@@ -14,8 +14,8 @@ public class RegistroMaterial {
     private Long usuarioId;
     private  Set<MaterialLogistico> itens;
 private RegistroMaterial(Builder cmd) {
-    if(cmd.itens.size()>3){
-        throw new RuntimeException("So pode 3 item pos vez");
+    if(cmd.itens.size()>8){
+        throw new RuntimeException("So pode 8 item pos vez");
     }
     try {
         if(cmd.filial!=null && cmd.itens!=null) {
@@ -42,6 +42,8 @@ private RegistroMaterial(Builder cmd) {
                 this.usuario = cmd.usuario;
 
     }
+
+    public RegistroMaterial() {}
 
     public Long getId() {
         return id;

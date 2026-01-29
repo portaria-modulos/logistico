@@ -15,7 +15,8 @@ public record UpdateMaterialDTO(
          @NotNull
          @NotEmpty
          @Size(max = 3, message = "É permitido no máximo 3 itens")
-         List<UpdateMaterialLogisticoDTO> itens
+         List<UpdateMaterialLogisticoDTO> itens,
+         List<MaterialLogisticoDTO> update
 ) {
 
 }

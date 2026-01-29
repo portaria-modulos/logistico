@@ -21,7 +21,7 @@ public record RegistroMaterialDTO(
          Integer numeroFIlial,
          @Valid
          @NotEmpty
-         @Size(max = 3, message = "É permitido no máximo 3 itens")
+         @Size(max = 8, message = "É permitido no máximo 8 itens")
          Set<MaterialLogisticoDTO> itens
 
 ) {
