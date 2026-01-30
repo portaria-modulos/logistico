@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,13 +38,15 @@ public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroM
 
     @Override
     public List<RegistroMaterial> listar(Integer filial,List<Integer> filiais) {
+        LocalDate dataInicio = LocalDateTime.now().minusDays(1).toLocalDate();
+
         List<RegistroMaterial> lista;
         if(filial!=null){
-            lista = repository.findAllRegistroFilial(filial,filiais).stream()
+            lista = repository.findAllRegistroFilial(filial,filiais,dataInicio).stream()
                     .map(MapperMaterial::convert).toList();
         }
         else {
-            lista = repository.findAllRegistro(filiais).stream()
+            lista = repository.findAllRegistro(filiais,dataInicio).stream()
                     .map(MapperMaterial::convert).toList();
         }
         return  lista;

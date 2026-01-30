@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,18 +18,16 @@ public interface RespositotyRegistroMaterial extends JpaRepository<RegistroMater
    SELECT r
    FROM RegistroMaterialEntity r
    WHERE r.filial IN :filiais
-     AND CAST(r.dataCreacao AS date) = CURRENT_DATE
-""")
-    List<RegistroMaterialEntity> findAllRegistro(@Param("filiais") List<Integer> filiais);
+     AND CAST(r.dataCreacao AS date) = :dataInicio""")
+    List<RegistroMaterialEntity> findAllRegistro(@Param("filiais") List<Integer> filiais,@Param("dataInicio") LocalDate dataInicio);
     @Query("SELECT r FROM RegistroMaterialEntity r WHERE r.filial = :filial and r.filial in :filiais " +
-            "AND CAST(r.dataCreacao AS date) = CURRENT_DATE")
+            "AND CAST(r.dataCreacao AS date) = :dataInicio")
     List<RegistroMaterialEntity> findAllRegistroFilial(
             @Param("filial") Integer filial,
-            List<Integer> filiais
+            List<Integer> filiais,@Param("dataInicio") LocalDate dataInicio
     );
     @Query("SELECT r FROM RegistroMaterialEntity r WHERE r.filial = :filial ORDER BY r.id DESC")
     Page<RegistroMaterialEntity> findByFilial(Integer filial, Pageable pageable);
 
     Optional<RegistroMaterialEntity> findByIdAndFilial(Long id, Integer filial);
-
 }
