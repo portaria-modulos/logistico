@@ -1,9 +1,11 @@
 package com.erp.logistico.domain.entities.recebimento;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 public class ItensCarregamento {
-    private Long id;
+    private  Long id;
     private String TipoBloco;
     private Integer qtdPendentes;
     private Integer qtdChamado;
@@ -25,23 +27,4 @@ public class ItensCarregamento {
     }
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTipoBloco() {
-        return TipoBloco;
-    }
-
-    public Integer getQtdPendentes() {
-        return qtdPendentes;
-    }
-
-    public Integer getQtdChamado() {
-        return qtdChamado;
-    }
-
-    public LocalDateTime getDataAt() {
-        return dataAt;
-    }
 }
