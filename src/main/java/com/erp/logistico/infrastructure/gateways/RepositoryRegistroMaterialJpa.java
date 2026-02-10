@@ -104,18 +104,18 @@ public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroM
                      .findFirst()
                      .orElseThrow(()->new RuntimeException("Item nao encontrado"));
 
-        } else {
-                item = new MaterialLogisticoEntity();
-                item.setRegistroMaterial(material);
-                material.getItens().add(item);
-            }
-            item.setQuantidadeManutencao(d.qtdManutencao());
-            item.setQuantiadeAtivo(d.qtdAtivo());
-            var total = d.qtdAtivo() + d.qtdManutencao();
-            item.setQuantidadeTotal(total);
-            repository.save(material);
+            } else {
+                    item = new MaterialLogisticoEntity();
+                    item.setRegistroMaterial(material);
+                    material.getItens().add(item);
+                }
+                item.setQuantidadeManutencao(d.qtdManutencao());
+                item.setQuantiadeAtivo(d.qtdAtivo());
+                var total = d.qtdAtivo() + d.qtdManutencao();
+                item.setQuantidadeTotal(total);
+                repository.save(material);
 
-        }
+            }
 
     }
 

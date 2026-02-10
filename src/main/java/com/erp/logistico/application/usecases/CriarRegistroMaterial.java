@@ -42,7 +42,7 @@ public class CriarRegistroMaterial {
        if (registro != null ) {
            LocalDate dataUltimoRegistro = registro.getDataCreacao().toLocalDate();
                if (dataUltimoRegistro.equals(hoje)) {
-                   throw new RuntimeException("A filial já possui um registro realizado hoje.");
+                   throw new RuntimeException("A filial selecionada já possui um registro realizado para o dia de hoje.");
                }
                return;
        }

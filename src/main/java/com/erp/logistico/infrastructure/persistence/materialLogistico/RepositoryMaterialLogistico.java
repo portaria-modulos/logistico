@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RepositoryMaterialLogistico extends JpaRepository<MaterialLogisticoEntity,Long> {
    List<MaterialLogisticoEntity> findByTipoAndFilialOrderByOffsetDateTimeDesc(String tipo,Long filial);
+
 }

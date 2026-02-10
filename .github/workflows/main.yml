@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: deploy em maquina local
         run: |
-          cd /media/grupomateus/3f9a2e1e-ae3c-4ea5-9750-035aa9017e4d/servidor
+          cd /media/grupomateus/3f9a2e1e-ae3c-4ea5-9750-035aa9017e4d1/servidor
           docker compose pull logistico-app
           docker compose up -d logistico-app
           
