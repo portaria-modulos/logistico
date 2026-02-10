@@ -4,13 +4,12 @@ import java.util.List;
 public class FactoryCarregamento {
 
 
-    public Carregamento fabricaDeCarregamento(Long id, String nomeUsuario, String nomeFilial, Long usuarioId, Integer fIlial, List<ItensCarregamento> itens, LocalDateTime dataAt){
+    public Carregamento fabricaDeCarregamento(long id, String nomeUsuario, String nomeFilial, Long usuarioId, Integer fIlial, List<ItensCarregamento> itens, LocalDateTime dataAt){
         var itensCarregamento = itens.stream()
                 .map(
                         e-> FactoryItens
                                 .fabricaDeCarregamento(e.getId(),e.getTipoBloco(),e.getQtdPendentes(),e.getQtdChamado()))
-                .toList()
-                ;
+                .toList();
         return  new Carregamento(id,nomeUsuario,usuarioId,fIlial,nomeFilial,itensCarregamento,dataAt);
     }
 

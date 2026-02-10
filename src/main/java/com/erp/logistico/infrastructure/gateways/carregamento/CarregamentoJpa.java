@@ -33,7 +33,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
     @Override
     public void save(RequestCarregamentoDto c) {
         var carregamento = new Carregamento(c.usuarioId(),c.nomeUsuario(),c.usuarioId(),c.filial(),c.nomeFilial()
-                ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdPendentes(),e.qtdChamado())).toList()
+                ,c.itens().stream().map(e->new ItensCarregamento(e.id(),e.TipoBloco(),e.qtdPendentes(),e.qtdChamado())).toList()
                 ,LocalDateTime.now());
         var entity = new EntityFactureRegistro().converte(carregamento);
         repositoty.save(entity);

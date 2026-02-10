@@ -11,7 +11,7 @@ RUN mvn dependency:go-offline
 COPY . .
 
 # CORREÇÃO 1: Adicionado -DskipTests para não validar banco de dados no build
-RUN mvn clean package -DskipTests
+RUN mvn clean package -Dmaven.test.skip=true
 
 FROM eclipse-temurin:17-jre-focal
 
