@@ -2,13 +2,13 @@ package com.erp.logistico.domain.entities.recebimento;
 import java.time.LocalDateTime;
 
 public class ItensCarregamento {
-    private  long id;
+    private  Long id;
     private String tipoBloco;
     private Integer qtdPendentes;
     private Integer qtdChamado;
     private LocalDateTime dataAt;
 
-    public ItensCarregamento(long id,
+    public ItensCarregamento(Long id,
             String tipoBloco,
                              Integer qtdPendentes,
                              Integer qtdChamado
@@ -23,11 +23,11 @@ public class ItensCarregamento {
         this.dataAt = LocalDateTime.now();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
