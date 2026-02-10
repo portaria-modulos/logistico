@@ -34,7 +34,7 @@ public class ControlerRecebimentto {
     @PostMapping("/registro")
     public ResponseEntity<?> save(@RequestBody() @Valid RequestCarregamentoDto request){
         criarRegistroRecebimento.save(request);
-        return ResponseEntity.ok("Salvo com sucesso");
+        return ResponseEntity.ok().body(Map.of("msg","Salvo com sucesso!"));
     }
     @GetMapping("/lista")
     public ResponseEntity<?> findAll(@RequestParam(value = "filial",required = false) Integer filial, @RequestParam("filiais") List<Integer> filiais){
