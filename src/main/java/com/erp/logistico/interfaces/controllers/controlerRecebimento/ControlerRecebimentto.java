@@ -24,11 +24,15 @@ public class ControlerRecebimentto {
    private final FindAll lista;
    private UpdateRecebimento updateService;
    private DeleteRecebimento deleteRecebimento;
-   public ControlerRecebimentto(CriarRegistroRecebimento criarRegistroRecebimento,FindAll lista,UpdateRecebimento updateServic,DeleteRecebimento deleteRecebimento){
+   private ListaRegistroGeralRecebimento listaService;
+   public ControlerRecebimentto(
+           CriarRegistroRecebimento criarRegistroRecebimento,
+           FindAll lista,UpdateRecebimento updateServic,DeleteRecebimento deleteRecebimento,ListaRegistroGeralRecebimento service){
        this.criarRegistroRecebimento = criarRegistroRecebimento;
        this.deleteRecebimento = deleteRecebimento;
        this.lista = lista;
        this.updateService = updateServic;
+       this.listaService = service;
    }
 //    @PreAuthorize("@permissaoService.hasPermission(authentication,'DELETE_LOGISTICO')")
     @PostMapping("/registro")
@@ -48,9 +52,19 @@ public class ControlerRecebimentto {
         return ResponseEntity.ok("atualizado com sucesso");
     }
     @PreAuthorize("@permissaoService.hasPermission(authentication,'DELETE_LOGISTICO')")
-    @DeleteMapping("/delete/cardlogistico")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMaterialLogistico(@RequestParam("registroId") Long registroId, @RequestParam("filial") Integer filial){
         deleteRecebimento.deleteRegistro(registroId,filial);
+        System.out.println("id "+registroId + " f"+filial);
         return ResponseEntity.ok("deletado com sucesso");
+    }
+
+    @GetMapping("/lista/geral")
+    public ResponseEntity<?> finAllGeral(
+            @RequestParam(value = "filial") Integer filial,
+            Pageable page
+    ){
+        var lista =listaService.listarItensRegistroFiliais(filial,page);
+        return ResponseEntity.ok(Map.of("recebimentpFilias",lista));
     }
 }

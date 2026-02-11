@@ -7,8 +7,8 @@ public class FactoryItens {
 
     public static ItensCarregamento fabricaDeCarregamento(Long id,String tipoBloco,
                                                    Integer qtdPendentes,
-                                                   Integer qtdChamado
+                                                   Integer qtdChamado,Integer qtdDescarregado
                                                    ){
-        return  new ItensCarregamento(id,tipoBloco,qtdPendentes,qtdChamado);
+        return  new ItensCarregamento(id,tipoBloco,qtdPendentes,qtdChamado,qtdDescarregado);
     }
 }

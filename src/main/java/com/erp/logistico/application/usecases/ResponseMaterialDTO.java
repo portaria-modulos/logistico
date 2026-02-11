@@ -1,5 +1,6 @@
 package com.erp.logistico.application.usecases;
 
+import com.erp.logistico.domain.dto.recebimentoDto.CarregamentoDto;
 import com.erp.logistico.domain.entities.registro.RegistroMaterial;
 
 import java.time.LocalDateTime;

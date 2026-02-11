@@ -21,6 +21,7 @@ public class ItensCarregamentoEntity {
     private String tipoBloco;
     private Integer qtdPendentes;
     private Integer qtdChamado;
+    private Integer qtdDescarregado;
     private Integer qtdTotal;
     private LocalDateTime dataAt;
     @ManyToOne
@@ -32,5 +33,6 @@ public class ItensCarregamentoEntity {
         this.qtdChamado = item.getQtdChamado();
         this.dataAt = item.getDataAt();
         this.carregamento = c;
+        this.qtdDescarregado = item.getQtdDescarregado();
     }
 }

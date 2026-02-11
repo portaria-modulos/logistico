@@ -7,11 +7,13 @@ public class ItensCarregamento {
     private Integer qtdPendentes;
     private Integer qtdChamado;
     private LocalDateTime dataAt;
+    private Integer qtdDescarregado;
 
     public ItensCarregamento(Long id,
             String tipoBloco,
                              Integer qtdPendentes,
-                             Integer qtdChamado
+                             Integer qtdChamado,
+                             Integer qtdDescarregado
                              ) {
         if( qtdPendentes < 0){
             throw new IllegalArgumentException("Valor invalido");
@@ -21,6 +23,7 @@ public class ItensCarregamento {
         this.qtdPendentes = qtdPendentes;
         this.qtdChamado = qtdChamado;
         this.dataAt = LocalDateTime.now();
+        this.qtdDescarregado = qtdDescarregado;
     }
 
     public Long getId() {
@@ -61,5 +64,13 @@ public class ItensCarregamento {
 
     public void setDataAt(LocalDateTime dataAt) {
         this.dataAt = dataAt;
+    }
+
+    public Integer getQtdDescarregado() {
+        return qtdDescarregado;
+    }
+
+    public void setQtdDescarregado(Integer qtdDescarregado) {
+        this.qtdDescarregado = qtdDescarregado;
     }
 }

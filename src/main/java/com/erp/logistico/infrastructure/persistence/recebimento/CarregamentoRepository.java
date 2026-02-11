@@ -1,6 +1,7 @@
 package com.erp.logistico.infrastructure.persistence.recebimento;
 
-import com.erp.logistico.infrastructure.persistence.RegistroMaterial.RegistroMaterialEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface CarregamentoRepositoty extends JpaRepository<CarregamentoEntity,Long> {
+public interface CarregamentoRepository extends JpaRepository<CarregamentoEntity,Long> {
     CarregamentoEntity findByFilial(Integer filial);
 
     @Query("""
@@ -21,8 +22,8 @@ public interface CarregamentoRepositoty extends JpaRepository<CarregamentoEntity
 
     @Query("SELECT r FROM CarregamentoEntity r WHERE r.filial = :filial " +
             "AND CAST(r.dataAt AS date) = CURRENT_DATE")
-    List<CarregamentoEntity> findOneByFilial(@Param("filial") Integer filial);
-
+    CarregamentoEntity findOneByFilial(@Param("filial") Integer filial);
+    @Query("SELECT r FROM CarregamentoEntity r WHERE r.id = :id and r.filial = :filial")
     Optional<CarregamentoEntity> findByIdAndFilial(Long id, Integer filial);
 
     @Query("SELECT r FROM CarregamentoEntity r WHERE r.filial = :filial and r.filial in :filiais " +
@@ -31,4 +32,6 @@ public interface CarregamentoRepositoty extends JpaRepository<CarregamentoEntity
             @Param("filial") Integer filial,
             List<Integer> filiais,@Param("dataInicio") LocalDate dataInicio
     );
+    @Query("SELECT r FROM CarregamentoEntity r WHERE r.filial = :filial ORDER BY r.id DESC")
+    Page<CarregamentoEntity> findByAllFilial(Integer filial, Pageable page);
 }

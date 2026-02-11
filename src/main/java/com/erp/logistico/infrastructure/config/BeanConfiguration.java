@@ -9,17 +9,13 @@ import com.erp.logistico.application.usecases.ListaRegistroMaterial;
 import com.erp.logistico.application.usecases.MaterialLogistico.DeleteMaterialLogistico;
 import com.erp.logistico.application.usecases.MaterialLogistico.FindOneMaterialLogistico;
 import com.erp.logistico.application.usecases.MaterialLogistico.UpdateMaterialLogistico;
-import com.erp.logistico.application.usecases.recebimento.CriarRegistroRecebimento;
-import com.erp.logistico.application.usecases.recebimento.DeleteRecebimento;
-import com.erp.logistico.application.usecases.recebimento.FindAll;
-import com.erp.logistico.application.usecases.recebimento.UpdateRecebimento;
-import com.erp.logistico.domain.dto.recebimentoDto.RequestCarregamentoDto;
+import com.erp.logistico.application.usecases.recebimento.*;
 import com.erp.logistico.infrastructure.gateways.RepositoryMateriaLogistico;
 import com.erp.logistico.infrastructure.gateways.RepositoryRegistroMaterialJpa;
 import com.erp.logistico.infrastructure.gateways.carregamento.CarregamentoJpa;
 import com.erp.logistico.infrastructure.persistence.RegistroMaterial.RespositotyRegistroMaterial;
 import com.erp.logistico.infrastructure.persistence.materialLogistico.RepositoryMaterialLogistico;
-import com.erp.logistico.infrastructure.persistence.recebimento.CarregamentoRepositoty;
+import com.erp.logistico.infrastructure.persistence.recebimento.CarregamentoRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,7 +63,7 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public CarregamentoJpa inicializa(CarregamentoRepositoty repositoty){
+    public CarregamentoJpa inicializa(CarregamentoRepository repositoty){
        return new CarregamentoJpa(repositoty);
     }
 
@@ -87,6 +83,10 @@ public class BeanConfiguration {
     @Bean
     public  DeleteRecebimento deleteregistro(CarregamentoGateway repository){
         return new DeleteRecebimento(repository);
+    }
+    @Bean
+    public ListaRegistroGeralRecebimento listaRecebimento(CarregamentoGateway repository){
+        return new  ListaRegistroGeralRecebimento(repository);
     }
 
 }

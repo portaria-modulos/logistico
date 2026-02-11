@@ -18,7 +18,6 @@ public class CriarRegistroRecebimento {
      if(d.itens().size()>8){
          throw new RuntimeException("Lista de itens muito grande");
      }
-
      var recebimento = repository.findOne(d.filial());
 
      if(recebimento!=null){
