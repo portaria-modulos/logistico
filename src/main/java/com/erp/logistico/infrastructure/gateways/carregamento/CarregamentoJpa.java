@@ -47,7 +47,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
     @Override
     public List<RequestCarregamentoDto> Lista(Integer filial,List<Integer> filiais) {
         List<RequestCarregamentoDto> lista;
-        LocalDate dataInicio = LocalDateTime.now().minusDays(1).toLocalDate();
+        LocalDate dataInicio = LocalDateTime.now().minusDays(0).toLocalDate();
         if(filial!=null){
             var car = repository.findAllRegistroFilial(filial,filiais,dataInicio).stream().map(
                     e ->
