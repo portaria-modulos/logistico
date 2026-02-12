@@ -11,7 +11,7 @@ import lombok.Setter;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "material_logistico")
+@Table(name = "material_logistico",schema = "logistico")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,7 +30,11 @@ public class MaterialLogisticoEntity {
     private  Long usuarioId;
     private OffsetDateTime offsetDateTime;
     private boolean ativo;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "registroMaterial_id",
+            referencedColumnName = "id"
+    )
     private RegistroMaterialEntity registroMaterial;
     public MaterialLogisticoEntity(MaterialLogistico e) {
         this.tipo = e.getTipo();

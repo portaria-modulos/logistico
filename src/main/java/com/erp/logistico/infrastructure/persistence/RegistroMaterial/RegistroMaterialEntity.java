@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "controle_material_logistico")
+@Table(name = "controle_material_logistico",schema = "logistico")
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor

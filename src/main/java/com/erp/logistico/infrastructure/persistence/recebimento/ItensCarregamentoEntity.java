@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 @Entity
-@Table(name = "itens_carregamento")
+@Table(name = "itens_carregamento",schema = "recebimento")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +24,11 @@ public class ItensCarregamentoEntity {
     private Integer qtdDescarregado;
     private Integer qtdTotal;
     private LocalDateTime dataAt;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            name = "carregamento_id",
+            referencedColumnName = "id"
+    )
     private CarregamentoEntity carregamento;
 
     public ItensCarregamentoEntity(ItensCarregamento item,CarregamentoEntity c) {
