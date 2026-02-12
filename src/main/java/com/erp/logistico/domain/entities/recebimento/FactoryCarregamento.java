@@ -12,7 +12,7 @@ public class FactoryCarregamento {
                                         e.getId(),
                                         e.getTipoBloco(),
                                         e.getQtdPendentes()
-                                        ,e.getQtdChamado()
+                                        ,e.getQtdPorto()
                                         ,e.getQtdDescarregado()
                                 ))
                 .toList();

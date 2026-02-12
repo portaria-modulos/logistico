@@ -20,9 +20,10 @@ public class ItensCarregamentoEntity {
     private Long id;
     private String tipoBloco;
     private Integer qtdPendentes;
-    private Integer qtdChamado;
+    private Integer qtdPorto;
     private Integer qtdDescarregado;
     private Integer qtdTotal;
+    private Long  gmBlooId;
     private LocalDateTime dataAt;
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -34,7 +35,7 @@ public class ItensCarregamentoEntity {
     public ItensCarregamentoEntity(ItensCarregamento item,CarregamentoEntity c) {
         this.qtdPendentes = item.getQtdPendentes();
         this.tipoBloco = item.getTipoBloco();
-        this.qtdChamado = item.getQtdChamado();
+        this.qtdPorto = item.getQtdPorto();
         this.dataAt = item.getDataAt();
         this.carregamento = c;
         this.qtdDescarregado = item.getQtdDescarregado();

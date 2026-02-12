@@ -12,11 +12,11 @@ public record ItensCarregamentoUpdateDto(
         @NotNull
         Integer qtdPendentes,
         @NotNull
-        Integer qtdChamado,
+        Integer qtdPorto,
         Integer qtdDescarregado
 ) {
 
     public ItensCarregamentoUpdateDto(ItensCarregamento i) {
-        this(i.getId(),i.getTipoBloco(),i.getQtdPendentes(),i.getQtdChamado(), i.getQtdDescarregado());
+        this(i.getId(),i.getTipoBloco(),i.getQtdPendentes(),i.getQtdPorto(), i.getQtdDescarregado());
     }
 }

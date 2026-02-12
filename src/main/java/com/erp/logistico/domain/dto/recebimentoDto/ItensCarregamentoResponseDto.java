@@ -9,11 +9,11 @@ public record ItensCarregamentoResponseDto(
         Long id,
         String TipoBloco,
         Integer qtdPendentes,
-        Integer qtdChamado,
+        Integer qtdPorto,
         Integer qtdDescarregado
 ) {
 
     public ItensCarregamentoResponseDto(ItensCarregamento i) {
-        this(i.getId(),i.getTipoBloco(),i.getQtdPendentes(),i.getQtdChamado(),i.getQtdDescarregado()!=null?i.getQtdDescarregado():null);
+        this(i.getId(),i.getTipoBloco(),i.getQtdPendentes(),i.getQtdPorto(),i.getQtdDescarregado()!=null?i.getQtdDescarregado():null);
     }
 }

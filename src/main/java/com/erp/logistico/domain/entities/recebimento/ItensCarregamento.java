@@ -5,14 +5,14 @@ public class ItensCarregamento {
     private  Long id;
     private String tipoBloco;
     private Integer qtdPendentes;
-    private Integer qtdChamado;
+    private Integer qtdPorto;
     private LocalDateTime dataAt;
     private Integer qtdDescarregado;
 
     public ItensCarregamento(Long id,
             String tipoBloco,
                              Integer qtdPendentes,
-                             Integer qtdChamado,
+                             Integer qtdPorto,
                              Integer qtdDescarregado
                              ) {
         if( qtdPendentes < 0){
@@ -21,7 +21,7 @@ public class ItensCarregamento {
         this.id = id;
         this.tipoBloco = tipoBloco;
         this.qtdPendentes = qtdPendentes;
-        this.qtdChamado = qtdChamado;
+        this.qtdPorto = qtdPorto;
         this.dataAt = LocalDateTime.now();
         this.qtdDescarregado = qtdDescarregado;
     }
@@ -50,12 +50,12 @@ public class ItensCarregamento {
         this.qtdPendentes = qtdPendentes;
     }
 
-    public Integer getQtdChamado() {
-        return qtdChamado;
+    public Integer getQtdPorto() {
+        return qtdPorto;
     }
 
-    public void setQtdChamado(Integer qtdChamado) {
-        this.qtdChamado = qtdChamado;
+    public void setQtdPorto(Integer qtdChamado) {
+        this.qtdPorto = qtdPorto;
     }
 
     public LocalDateTime getDataAt() {

@@ -31,7 +31,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
     @Override
     public void save(RequestCarregamentoDto c) {
         var carregamento = new Carregamento(null,c.nomeUsuario(),c.usuarioId(),c.filial(),c.nomeFilial()
-                ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdPendentes(),e.qtdChamado(),e.qtdDescarregado())).toList()
+                ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdPendentes(),e.qtdPorto(),e.qtdDescarregado())).toList()
                 ,LocalDateTime.now());
         var entity = new EntityFactureRegistro().converte(carregamento);
         repository.save(entity);
@@ -60,7 +60,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                     e.getItens().stream().map(item -> new ItensCarregamento(item.getId(),
                                             item.getTipoBloco(),
                                             item.getQtdPendentes(),
-                                            item.getQtdChamado(),
+                                            item.getQtdPorto(),
                                             item.getQtdDescarregado()
                                             )
                                     ).toList(), e.getDataAt())
@@ -79,7 +79,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                             new ItensCarregamento(item.getId(),
                                                     item.getTipoBloco(),
                                                     item.getQtdPendentes(),
-                                                    item.getQtdChamado(),
+                                                    item.getQtdPorto(),
                                                     item.getQtdDescarregado()
                                             )
                                     ).toList(), e.getDataAt())
@@ -99,7 +99,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                            new ItensCarregamento(e.getId()
                                    ,e.getTipoBloco()
                                    ,e.getQtdPendentes()
-                                   ,e.getQtdChamado(),
+                                   ,e.getQtdPorto(),
                                    e.getQtdDescarregado()
                            )
            ).toList(),c.getDataAt());
@@ -115,20 +115,20 @@ public class CarregamentoJpa implements CarregamentoGateway {
         var carregamento = repository.findById(update.registroId()).orElseThrow(()->new RuntimeException("Registro não encontrado"));
         if (update.save() != null && !update.save().isEmpty()) {
             update.save().forEach(e->{
-                if(e.qtdChamado()<0 || e.qtdPendentes()<0){
+                if(e.qtdPorto()<0 || e.qtdPendentes()<0){
                     String msg = """
                         Quantidade invalida:
                         qtdChamado: %s
                         qtdPendentes: %s
                         
-                        """.formatted(e.qtdChamado(),e.qtdPendentes());
+                        """.formatted(e.qtdPorto(),e.qtdPendentes());
                     throw new RuntimeException(msg);
                 }
             });
             for (ItensCarregamentoDto novo : update.save()) {
                 ItensCarregamentoEntity item = new ItensCarregamentoEntity();
                 item.setCarregamento(carregamento);
-                item.setQtdChamado(novo.qtdChamado());
+                item.setQtdPorto(novo.qtdPorto());
                 item.setDataAt(LocalDateTime.now());
                 item.setQtdPendentes(novo.qtdPendentes());
                 item.setTipoBloco(novo.TipoBloco());
@@ -150,7 +150,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
           }
 
            itemEntity.setQtdPendentes(item.qtdPendentes());
-           itemEntity.setQtdChamado(item.qtdChamado());
+           itemEntity.setQtdPorto(item.qtdPorto());
            itemEntity.setQtdDescarregado(item.qtdDescarregado());
            repository.save(carregamento);
         }
@@ -165,7 +165,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                             new ItensCarregamento(e.getId()
                                     ,e.getTipoBloco()
                                     ,e.getQtdPendentes()
-                                    ,e.getQtdChamado(),
+                                    ,e.getQtdPorto(),
                                     e.getQtdDescarregado()
                             )
             ).toList(),c.getDataAt());
