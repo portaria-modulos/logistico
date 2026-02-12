@@ -19,7 +19,7 @@ class CarregamentoEntityTest {
 //     arrange
         itens = new ArrayList<>();
         itens.add(new ItensCarregamento(1l,"hort",
-                1,2,0));
+                1,2,0,1l));
         Carregamento c = new Carregamento(
                 1l,
                 "Elivandro",
@@ -40,7 +40,7 @@ class CarregamentoEntityTest {
        Assertions.assertThrows(IllegalArgumentException.class,()->{
           itens = new ArrayList<>();
            itens.add(new ItensCarregamento(1l,"",
-                   1,-2,0));
+                   1,-2,0,1l));
             new Carregamento(
                     1l,
                    "Elivandro",

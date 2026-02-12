@@ -13,7 +13,7 @@ public class FactoryCarregamento {
                                         e.getTipoBloco(),
                                         e.getQtdPendentes()
                                         ,e.getQtdPorto()
-                                        ,e.getQtdDescarregado()
+                                        ,e.getQtdDescarregado(),e.getGmBlocoId()
                                 ))
                 .toList();
         return  new Carregamento(id,nomeUsuario,usuarioId,fIlial,nomeFilial,itensCarregamento,dataAt);

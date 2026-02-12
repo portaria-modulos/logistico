@@ -4,26 +4,30 @@ import java.time.LocalDateTime;
 public class ItensCarregamento {
     private  Long id;
     private String tipoBloco;
-    private Integer qtdPendentes;
-    private Integer qtdPorto;
+    private Integer qtdPortariaDescarregada;
+    private Integer qtdPortoDescarregado;
+    private Integer qtdDescargasPendentes;
     private LocalDateTime dataAt;
-    private Integer qtdDescarregado;
+    private Long  gmBlocoId;
 
     public ItensCarregamento(Long id,
             String tipoBloco,
-                             Integer qtdPendentes,
-                             Integer qtdPorto,
-                             Integer qtdDescarregado
+                             Integer qtdDescargasPendentes,
+                             Integer qtdPortoDescarregado,
+                             Integer qtdPortariaDescarregada,
+                             Long  gmBlocoId
+
                              ) {
-        if( qtdPendentes < 0){
+        if( qtdDescargasPendentes < 0){
             throw new IllegalArgumentException("Valor invalido");
         }
         this.id = id;
         this.tipoBloco = tipoBloco;
-        this.qtdPendentes = qtdPendentes;
-        this.qtdPorto = qtdPorto;
+        this.qtdDescargasPendentes = qtdDescargasPendentes;
+        this.qtdPortoDescarregado = qtdPortoDescarregado;
         this.dataAt = LocalDateTime.now();
-        this.qtdDescarregado = qtdDescarregado;
+        this.qtdPortariaDescarregada = qtdPortariaDescarregada;
+        this.gmBlocoId = gmBlocoId;
     }
 
     public Long getId() {
@@ -43,19 +47,19 @@ public class ItensCarregamento {
     }
 
     public Integer getQtdPendentes() {
-        return qtdPendentes;
+        return qtdDescargasPendentes;
     }
 
-    public void setQtdPendentes(Integer qtdPendentes) {
-        this.qtdPendentes = qtdPendentes;
+    public void setQtdPendentes(Integer qtdDescargasPendentes) {
+        this.qtdDescargasPendentes = qtdDescargasPendentes;
     }
 
     public Integer getQtdPorto() {
-        return qtdPorto;
+        return this.qtdPortoDescarregado;
     }
 
     public void setQtdPorto(Integer qtdChamado) {
-        this.qtdPorto = qtdPorto;
+        this.qtdPortoDescarregado = qtdPortoDescarregado;
     }
 
     public LocalDateTime getDataAt() {
@@ -67,10 +71,14 @@ public class ItensCarregamento {
     }
 
     public Integer getQtdDescarregado() {
-        return qtdDescarregado;
+        return qtdPortariaDescarregada;
     }
 
-    public void setQtdDescarregado(Integer qtdDescarregado) {
-        this.qtdDescarregado = qtdDescarregado;
+    public void setQtdDescarregado(Integer qtdPortariaDescarregada) {
+        this.qtdPortariaDescarregada = qtdPortariaDescarregada;
+    }
+
+    public Long getGmBlocoId() {
+        return gmBlocoId;
     }
 }

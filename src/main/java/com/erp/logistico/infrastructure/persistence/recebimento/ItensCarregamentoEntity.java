@@ -18,12 +18,12 @@ public class ItensCarregamentoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long  gmBlocoId;
     private String tipoBloco;
-    private Integer qtdPendentes;
-    private Integer qtdPorto;
-    private Integer qtdDescarregado;
+    private int qtdPortariaDescarregada;
+    private int qtdPortoDescarregado;
+    private int qtdDescargasPendentes;
     private Integer qtdTotal;
-    private Long  gmBlooId;
     private LocalDateTime dataAt;
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -33,11 +33,12 @@ public class ItensCarregamentoEntity {
     private CarregamentoEntity carregamento;
 
     public ItensCarregamentoEntity(ItensCarregamento item,CarregamentoEntity c) {
-        this.qtdPendentes = item.getQtdPendentes();
+        this.qtdDescargasPendentes = item.getQtdPendentes();
         this.tipoBloco = item.getTipoBloco();
-        this.qtdPorto = item.getQtdPorto();
+        this.qtdPortoDescarregado = item.getQtdPorto();
         this.dataAt = item.getDataAt();
         this.carregamento = c;
-        this.qtdDescarregado = item.getQtdDescarregado();
+        this.qtdPortariaDescarregada = item.getQtdDescarregado();
+        this.gmBlocoId = c.getId();
     }
 }

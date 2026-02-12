@@ -10,7 +10,7 @@ class FactoryCarregamentoTest {
     @Test
     public void deveSalvaItensViaFacture(){
         List<ItensCarregamento> itens = new ArrayList<>();
-        var itensCarregameno = new ItensCarregamento(1l,"frios",0,0,0);
+        var itensCarregameno = new ItensCarregamento(1l,"frios",0,0,0,1l);
         itens.add(itensCarregameno);
         var ca = new FactoryCarregamento();
        var carregamento =   ca.fabricaDeCarregamento(1l,"Bruna","Itapera",1l,112,itens, LocalDateTime.now());

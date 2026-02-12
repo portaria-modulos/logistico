@@ -10,10 +10,10 @@ public record ItensCarregamentoUpdateDto(
         @NotBlank
         String TipoBloco,
         @NotNull
-        Integer qtdPendentes,
+        Integer qtdDescargasPendentes,
         @NotNull
-        Integer qtdPorto,
-        Integer qtdDescarregado
+        Integer qtdPortoDescarregado,
+        Integer qtdPortariaDescarregada
 ) {
 
     public ItensCarregamentoUpdateDto(ItensCarregamento i) {

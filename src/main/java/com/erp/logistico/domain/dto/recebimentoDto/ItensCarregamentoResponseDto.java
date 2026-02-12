@@ -8,12 +8,16 @@ import jakarta.validation.constraints.NotNull;
 public record ItensCarregamentoResponseDto(
         Long id,
         String TipoBloco,
-        Integer qtdPendentes,
-        Integer qtdPorto,
-        Integer qtdDescarregado
+        @NotNull
+        Integer qtdPortariaDescarregada,
+        @NotNull
+        Integer qtdPortoDescarregado,
+        @NotNull
+        Integer qtdDescargasPendentes,
+        @NotNull
+        Long gmBlocoId
 ) {
-
     public ItensCarregamentoResponseDto(ItensCarregamento i) {
-        this(i.getId(),i.getTipoBloco(),i.getQtdPendentes(),i.getQtdPorto(),i.getQtdDescarregado()!=null?i.getQtdDescarregado():null);
+        this(i.getId(),i.getTipoBloco(),i.getQtdDescarregado(),i.getQtdPorto(),i.getQtdPendentes()!=null?i.getQtdPendentes():null,i.getGmBlocoId());
     }
 }

@@ -31,19 +31,16 @@ public class CarregamentoJpa implements CarregamentoGateway {
     @Override
     public void save(RequestCarregamentoDto c) {
         var carregamento = new Carregamento(null,c.nomeUsuario(),c.usuarioId(),c.filial(),c.nomeFilial()
-                ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdPendentes(),e.qtdPorto(),e.qtdDescarregado())).toList()
+                ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdDescargasPendentes(),e.qtdPortoDescarregado(),e.qtdPortariaDescarregada(),e.gmBlocoId())).toList()
                 ,LocalDateTime.now());
         var entity = new EntityFactureRegistro().converte(carregamento);
         repository.save(entity);
-
     }
-
     @Override
     public void delete(Long id,Integer filial) {
         var item = repository.findByIdAndFilial(id,filial).orElseThrow(()->new RuntimeException("Registro não encontrado"));
          repository.delete(item);
     }
-
     @Override
     public List<RequestCarregamentoDto> Lista(Integer filial,List<Integer> filiais) {
         List<RequestCarregamentoDto> lista;
@@ -59,9 +56,10 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                     e.getFilial(),
                                     e.getItens().stream().map(item -> new ItensCarregamento(item.getId(),
                                             item.getTipoBloco(),
-                                            item.getQtdPendentes(),
-                                            item.getQtdPorto(),
-                                            item.getQtdDescarregado()
+                                            item.getQtdDescargasPendentes(),
+                                            item.getQtdPortoDescarregado(),
+                                            item.getQtdPortariaDescarregada(),
+                                            null
                                             )
                                     ).toList(), e.getDataAt())
             );
@@ -78,9 +76,9 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                     e.getItens().stream().map(item ->
                                             new ItensCarregamento(item.getId(),
                                                     item.getTipoBloco(),
-                                                    item.getQtdPendentes(),
-                                                    item.getQtdPorto(),
-                                                    item.getQtdDescarregado()
+                                                    item.getQtdDescargasPendentes(),
+                                                    item.getQtdPortoDescarregado(),
+                                                    item.getQtdPortariaDescarregada(),null
                                             )
                                     ).toList(), e.getDataAt())
             );
@@ -98,9 +96,10 @@ public class CarregamentoJpa implements CarregamentoGateway {
                    e->
                            new ItensCarregamento(e.getId()
                                    ,e.getTipoBloco()
-                                   ,e.getQtdPendentes()
-                                   ,e.getQtdPorto(),
-                                   e.getQtdDescarregado()
+                                   ,e.getQtdDescargasPendentes()
+                                   ,e.getQtdPortoDescarregado(),
+                                   e.getQtdPortariaDescarregada()
+                                   ,null
                            )
            ).toList(),c.getDataAt());
            return new CarregamentoDto(cs);
@@ -115,24 +114,24 @@ public class CarregamentoJpa implements CarregamentoGateway {
         var carregamento = repository.findById(update.registroId()).orElseThrow(()->new RuntimeException("Registro não encontrado"));
         if (update.save() != null && !update.save().isEmpty()) {
             update.save().forEach(e->{
-                if(e.qtdPorto()<0 || e.qtdPendentes()<0){
+                if(e.qtdPortoDescarregado()<0 || e.qtdDescargasPendentes()<0){
                     String msg = """
                         Quantidade invalida:
                         qtdChamado: %s
                         qtdPendentes: %s
                         
-                        """.formatted(e.qtdPorto(),e.qtdPendentes());
+                        """.formatted(e.qtdPortoDescarregado(),e.qtdDescargasPendentes());
                     throw new RuntimeException(msg);
                 }
             });
             for (ItensCarregamentoDto novo : update.save()) {
                 ItensCarregamentoEntity item = new ItensCarregamentoEntity();
                 item.setCarregamento(carregamento);
-                item.setQtdPorto(novo.qtdPorto());
+                item.setQtdPortoDescarregado(novo.qtdPortoDescarregado());
                 item.setDataAt(LocalDateTime.now());
-                item.setQtdPendentes(novo.qtdPendentes());
+                item.setQtdDescargasPendentes(novo.qtdDescargasPendentes());
                 item.setTipoBloco(novo.TipoBloco());
-                item.setQtdDescarregado(novo.qtdDescarregado());
+                item.setQtdPortariaDescarregada(novo.qtdPortariaDescarregada());
                 carregamento.getItens().add(item);
 
             }
@@ -149,9 +148,9 @@ public class CarregamentoJpa implements CarregamentoGateway {
                itemEntity.setCarregamento(carregamento);
           }
 
-           itemEntity.setQtdPendentes(item.qtdPendentes());
-           itemEntity.setQtdPorto(item.qtdPorto());
-           itemEntity.setQtdDescarregado(item.qtdDescarregado());
+           itemEntity.setQtdDescargasPendentes(item.qtdDescargasPendentes());
+           itemEntity.setQtdPortoDescarregado(item.qtdPortoDescarregado());
+           itemEntity.setQtdPortariaDescarregada(item.qtdPortariaDescarregada());
            repository.save(carregamento);
         }
     }
@@ -164,9 +163,10 @@ public class CarregamentoJpa implements CarregamentoGateway {
                     e->
                             new ItensCarregamento(e.getId()
                                     ,e.getTipoBloco()
-                                    ,e.getQtdPendentes()
-                                    ,e.getQtdPorto(),
-                                    e.getQtdDescarregado()
+                                    ,e.getQtdDescargasPendentes()
+                                    ,e.getQtdPortoDescarregado(),
+                                    e.getQtdPortariaDescarregada(),
+                                    null
                             )
             ).toList(),c.getDataAt());
         });
