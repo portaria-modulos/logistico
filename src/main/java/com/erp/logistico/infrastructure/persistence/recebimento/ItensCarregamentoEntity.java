@@ -23,7 +23,7 @@ public class ItensCarregamentoEntity {
     private int qtdPortariaDescarregada;
     private int qtdPortoDescarregado;
     private int qtdDescargasPendentes;
-    private Integer qtdTotal;
+    private Integer qtdtTotalCargaConcluida;
     private LocalDateTime dataAt;
     @ManyToOne(optional = false)
     @JoinColumn(
@@ -31,7 +31,6 @@ public class ItensCarregamentoEntity {
             referencedColumnName = "id"
     )
     private CarregamentoEntity carregamento;
-
     public ItensCarregamentoEntity(ItensCarregamento item,CarregamentoEntity c) {
         this.qtdDescargasPendentes = item.getQtdPendentes();
         this.tipoBloco = item.getTipoBloco();
@@ -40,5 +39,6 @@ public class ItensCarregamentoEntity {
         this.carregamento = c;
         this.qtdPortariaDescarregada = item.getQtdDescarregado();
         this.gmBlocoId = c.getId();
+        this.qtdtTotalCargaConcluida = item.getQtdtTotalCargaConcluida();
     }
 }

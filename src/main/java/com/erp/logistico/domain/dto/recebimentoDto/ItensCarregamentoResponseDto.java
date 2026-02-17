@@ -15,9 +15,10 @@ public record ItensCarregamentoResponseDto(
         @NotNull
         Integer qtdDescargasPendentes,
         @NotNull
-        Long gmBlocoId
+        Long gmBlocoId,
+        Integer qtdtTotalCargaConcluida
 ) {
     public ItensCarregamentoResponseDto(ItensCarregamento i) {
-        this(i.getId(),i.getTipoBloco(),i.getQtdDescarregado(),i.getQtdPorto(),i.getQtdPendentes()!=null?i.getQtdPendentes():null,i.getGmBlocoId());
+        this(i.getId(),i.getTipoBloco(),i.getQtdDescarregado(),i.getQtdPorto(),i.getQtdPendentes()!=null?i.getQtdPendentes():null,i.getGmBlocoId(),i.getQtdtTotalCargaConcluida());
     }
 }

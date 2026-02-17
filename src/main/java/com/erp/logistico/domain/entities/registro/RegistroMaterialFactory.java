@@ -15,8 +15,8 @@ public class RegistroMaterialFactory {
                 .setDataCreacao(LocalDateTime.now())
                 .setFilial(dto.numeroFIlial())
                 .setFilialName(dto.nomeFilial())
-               .setUsuario(dto.usuario())
-               .SetUsuarioId(dto.usuarioId())
+                .setUsuario(dto.usuario())
+                .SetUsuarioId(dto.usuarioId())
                 .setItens(materaial)
                 .build();
     }

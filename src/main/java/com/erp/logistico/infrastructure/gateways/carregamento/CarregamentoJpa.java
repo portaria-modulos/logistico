@@ -6,19 +6,22 @@ import com.erp.logistico.application.usecases.recebimento.UpdateRecebimentoDTO;
 import com.erp.logistico.domain.dto.recebimentoDto.CarregamentoDto;
 import com.erp.logistico.domain.dto.recebimentoDto.ItensCarregamentoDto;
 import com.erp.logistico.domain.dto.recebimentoDto.RequestCarregamentoDto;
+import com.erp.logistico.domain.dto.recebimentoDto.ResumoCargaDto;
 import com.erp.logistico.domain.entities.recebimento.Carregamento;
 import com.erp.logistico.domain.entities.recebimento.FactoryCarregamento;
 import com.erp.logistico.domain.entities.recebimento.ItensCarregamento;
-import com.erp.logistico.infrastructure.persistence.recebimento.CarregamentoRepository;
-import com.erp.logistico.infrastructure.persistence.recebimento.EntityFactureRegistro;
-import com.erp.logistico.infrastructure.persistence.recebimento.ItensCarregamentoEntity;
+import com.erp.logistico.domain.entities.recebimento.ResumoCarga;
+import com.erp.logistico.infrastructure.persistence.recebimento.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class CarregamentoJpa implements CarregamentoGateway {
    private final CarregamentoRepository repository;
@@ -29,11 +32,18 @@ public class CarregamentoJpa implements CarregamentoGateway {
 
 
     @Override
+    @Transactional
     public void save(RequestCarregamentoDto c) {
         var carregamento = new Carregamento(null,c.nomeUsuario(),c.usuarioId(),c.filial(),c.nomeFilial()
                 ,c.itens().stream().map(e->new ItensCarregamento(null,e.TipoBloco(),e.qtdDescargasPendentes(),e.qtdPortoDescarregado(),e.qtdPortariaDescarregada(),e.gmBlocoId())).toList()
-                ,LocalDateTime.now());
+                ,LocalDateTime.now(),null);
+        var portoTotalConsolidado = portoTotalConsolidado(carregamento.getItens());
+        var pendentesTotalConsolidada = pendentesTotalConsolidada(carregamento.getItens());
+        var portariaTotalConsolidada= portariaTotalConsolidada(carregamento.getItens());
+        var volumeTotalConsolidado = volumeTotalConsolidado(carregamento.getItens());
+      var l =  new ResumoCargaEntity(portoTotalConsolidado,portariaTotalConsolidada,pendentesTotalConsolidada,volumeTotalConsolidado);
         var entity = new EntityFactureRegistro().converte(carregamento);
+        entity.setResumoCargaEntity(l);
         repository.save(entity);
     }
     @Override
@@ -61,7 +71,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                             item.getQtdPortariaDescarregada(),
                                             null
                                             )
-                                    ).toList(), e.getDataAt())
+                                    ).toList(), e.getDataAt(),FactureResumo.ConvertResumo(e.getResumoCargaEntity()))
             );
             lista =  car.map(RequestCarregamentoDto::new).toList();
         }else {
@@ -80,7 +90,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                                     item.getQtdPortoDescarregado(),
                                                     item.getQtdPortariaDescarregada(),null
                                             )
-                                    ).toList(), e.getDataAt())
+                                    ).toList(), e.getDataAt(),FactureResumo.ConvertResumo(e.getResumoCargaEntity()))
             );
             lista =  car.map(RequestCarregamentoDto::new).toList();
         }
@@ -88,10 +98,17 @@ public class CarregamentoJpa implements CarregamentoGateway {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CarregamentoDto findOne(Integer filial){
        var c =   repository.findOneByFilial(filial);
        if(c!=null){
-           Carregamento cs = new Carregamento(c.getId(),c.getNomeUsuario(),c.getUsuarioId(),c.getFilial(),c.getNomeFilial(),c.getItens().stream().map(
+           ResumoCarga resumo = new ResumoCarga(
+                   c.getResumoCargaEntity().getPortoTotalConsolidado(),
+                   c.getResumoCargaEntity().getPortariaTotalConsolidada(),
+                   c.getResumoCargaEntity().getPendentesTotalConsolidada(),
+                   c.getResumoCargaEntity().getVolumeTotalConsolidado()
+           );
+           Carregamento car = new Carregamento(c.getId(),c.getNomeUsuario(),c.getUsuarioId(),c.getFilial(),c.getNomeFilial(),c.getItens().stream().map(
 
                    e->
                            new ItensCarregamento(e.getId()
@@ -101,8 +118,8 @@ public class CarregamentoJpa implements CarregamentoGateway {
                                    e.getQtdPortariaDescarregada()
                                    ,null
                            )
-           ).toList(),c.getDataAt());
-           return new CarregamentoDto(cs);
+           ).toList(),c.getDataAt(),new ResumoCargaDto(resumo));
+           return new CarregamentoDto(car);
        }
        return  null;
     }
@@ -137,6 +154,7 @@ public class CarregamentoJpa implements CarregamentoGateway {
             }
 
         }
+
         for(ItensCarregamentoUpdateDto item:update.itens()){
            ItensCarregamentoEntity itemEntity;
            if(item.id()!=null){
@@ -147,29 +165,70 @@ public class CarregamentoJpa implements CarregamentoGateway {
                itemEntity = new ItensCarregamentoEntity();
                itemEntity.setCarregamento(carregamento);
           }
-
            itemEntity.setQtdDescargasPendentes(item.qtdDescargasPendentes());
            itemEntity.setQtdPortoDescarregado(item.qtdPortoDescarregado());
            itemEntity.setQtdPortariaDescarregada(item.qtdPortariaDescarregada());
-           repository.save(carregamento);
+
         }
+        //fazendo o pass usando streans de itensCarregamentoEntity para itensCarregamento
+        var listaParaCalculo = carregamento.getItens().stream()
+                .map(e -> new ItensCarregamento(
+                        e.getId(),
+                        e.getTipoBloco(),
+                        e.getQtdDescargasPendentes(),
+                        e.getQtdPortoDescarregado(),
+                        e.getQtdPortariaDescarregada(),
+                        e.getGmBlocoId()))
+                .toList();
+
+        var resumo = new ResumoCargaEntity(
+                portoTotalConsolidado(listaParaCalculo),
+                portariaTotalConsolidada(listaParaCalculo),
+                pendentesTotalConsolidada(listaParaCalculo),
+                volumeTotalConsolidado(listaParaCalculo)
+        );
+
+        // relação entre a tabela resumo e o carregamento
+
+        carregamento.setResumoCargaEntity(resumo);
+
+        repository.save(carregamento);
     }
 
     @Override
     public Page<RequestCarregamentoDto> listarItensRecebimento(Integer filial, Pageable page) {
         var item = repository.findByAllFilial(filial,page).map(c->{
+            ResumoCarga resumo = new ResumoCarga(
+                    c.getResumoCargaEntity().getPortoTotalConsolidado(),
+                    c.getResumoCargaEntity().getPortariaTotalConsolidada(),
+                    c.getResumoCargaEntity().getPendentesTotalConsolidada(),
+                    c.getResumoCargaEntity().getVolumeTotalConsolidado()
+            );
             return new Carregamento(c.getId(),c.getNomeUsuario(),c.getUsuarioId(),c.getFilial(),c.getNomeFilial(),c.getItens().stream().map(
 
-                    e->
-                            new ItensCarregamento(e.getId()
+                    e-> new ItensCarregamento(e.getId()
                                     ,e.getTipoBloco()
-                                    ,e.getQtdDescargasPendentes()
-                                    ,e.getQtdPortoDescarregado(),
+                                    ,e.getQtdDescargasPendentes(),
+                                    e.getQtdPortoDescarregado(),
                                     e.getQtdPortariaDescarregada(),
                                     null
                             )
-            ).toList(),c.getDataAt());
+            ).toList(),c.getDataAt(),new ResumoCargaDto(resumo));
         });
       return item.map(RequestCarregamentoDto::new);
     }
+
+    private long portoTotalConsolidado(List<ItensCarregamento> item) {
+       return  item.stream().mapToLong(ItensCarregamento::getQtdPorto).sum();
+    }
+    private long portariaTotalConsolidada(List<ItensCarregamento> item) {
+        return  item.stream().mapToLong(ItensCarregamento::getQtdPortariaDescarregada).sum();
+    }
+    private long volumeTotalConsolidado(List<ItensCarregamento> item) {
+        return  item.stream().mapToLong(ItensCarregamento::getQtdtTotalCargaConcluida).sum();
+    }
+    private long pendentesTotalConsolidada(List<ItensCarregamento> item) {
+        return  item.stream().mapToLong(ItensCarregamento::getQtdDescargasPendentes).sum();
+    }
+
 }

@@ -1,4 +1,6 @@
 package com.erp.logistico.domain.entities.recebimento;
+import com.erp.logistico.domain.dto.recebimentoDto.ResumoCargaDto;
+
 import java.time.LocalDateTime;
 
 public class ItensCarregamento {
@@ -8,16 +10,10 @@ public class ItensCarregamento {
     private Integer qtdPortoDescarregado;
     private Integer qtdDescargasPendentes;
     private LocalDateTime dataAt;
+    private Integer qtdtTotalCargaConcluida;
     private Long  gmBlocoId;
-
     public ItensCarregamento(Long id,
-            String tipoBloco,
-                             Integer qtdDescargasPendentes,
-                             Integer qtdPortoDescarregado,
-                             Integer qtdPortariaDescarregada,
-                             Long  gmBlocoId
-
-                             ) {
+            String tipoBloco, Integer qtdDescargasPendentes,Integer qtdPortoDescarregado,Integer qtdPortariaDescarregada,Long gmBlocoId) {
         if( qtdDescargasPendentes < 0){
             throw new IllegalArgumentException("Valor invalido");
         }
@@ -27,9 +23,8 @@ public class ItensCarregamento {
         this.qtdPortoDescarregado = qtdPortoDescarregado;
         this.dataAt = LocalDateTime.now();
         this.qtdPortariaDescarregada = qtdPortariaDescarregada;
-        this.gmBlocoId = gmBlocoId;
+        this.qtdtTotalCargaConcluida = qtdPortoDescarregado + qtdPortariaDescarregada;
     }
-
     public Long getId() {
         return id;
     }
@@ -81,4 +76,25 @@ public class ItensCarregamento {
     public Long getGmBlocoId() {
         return gmBlocoId;
     }
+
+    public Integer getQtdPortariaDescarregada() {
+        return qtdPortariaDescarregada;
+    }
+
+    public Integer getQtdtTotalCargaConcluida() {
+        return qtdtTotalCargaConcluida;
+    }
+
+    public Integer getQtdDescargasPendentes() {
+        return qtdDescargasPendentes;
+    }
+
+    public Integer getQtdPortoDescarregado() {
+        return qtdPortoDescarregado;
+    }
+
+    public void setQtdtTotalCargaConcluida(Integer qtdtTotalCargaConcluida) {
+        this.qtdtTotalCargaConcluida = qtdtTotalCargaConcluida;
+    }
+
 }

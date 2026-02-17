@@ -1,5 +1,7 @@
 package com.erp.logistico.domain.entities.recebimento;
 
+import com.erp.logistico.domain.dto.recebimentoDto.ResumoCargaDto;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
