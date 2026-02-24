@@ -38,8 +38,7 @@ public class RepositoryRegistroMaterialJpa implements RepositoryGatewayRegistroM
 
     @Override
     public List<RegistroMaterial> listar(Integer filial,List<Integer> filiais) {
-        LocalDate dataInicio = LocalDateTime.now().minusDays(1).toLocalDate();
-
+        LocalDate dataInicio = LocalDateTime.now().minusDays(0).toLocalDate();
         List<RegistroMaterial> lista;
         if(filial!=null){
             lista = repository.findAllRegistroFilial(filial,filiais,dataInicio).stream()
